@@ -66,16 +66,16 @@ struct TokenResponse: Decodable, Authentication {
 
     decoder.keyDecodingStrategy = .convertFromSnakeCase
 
-    let dateFormatter = ISO8601DateFormatter()
-    dateFormatter.formatOptions = [.withInternetDateTime]
-    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-    let fractionalDateFormatter = ISO8601DateFormatter()
-    fractionalDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    fractionalDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-
     decoder.dateDecodingStrategy = .custom { decoder in
       let container = try decoder.singleValueContainer()
       let dateString = try container.decode(String.self)
+
+      let dateFormatter = ISO8601DateFormatter()
+      dateFormatter.formatOptions = [.withInternetDateTime]
+      dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+      let fractionalDateFormatter = ISO8601DateFormatter()
+      fractionalDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+      fractionalDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 
       return dateFormatter.date(from: dateString) ?? fractionalDateFormatter.date(from: dateString) ?? Date()
     }
